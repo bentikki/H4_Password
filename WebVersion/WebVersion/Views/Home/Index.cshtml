@@ -2,29 +2,50 @@
     ViewBag.Title = "Login";
 }
 
-@if (ViewBag.Error != null)
-{
-    <p>@ViewBag.Error</p>
-}
+<div class="container">
+    <div class="login-window">
+        <div class="row">
+            <div class="col-sm-6 col-xs-12 login-large-icon">
+                <i class="fas fa-sign-in-alt icon"></i>
+            </div>
+            <div class="col-sm-6 col-xs-12">
 
-<h1>Login</h1>
+                <h1 class="mb-3">
+                    Login
+                </h1>
+                @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "main-form", autocomplete = "off" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <form>
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Username</label>
+                            <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" name="username">
+                            <small id="emailHelp" class="form-text text-muted">Your username has to be unique!</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputPassword1">Password</label>
+                            <input type="password" class="form-control" id="exampleInputPassword1" name="password">
+                        </div>
 
-@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "main-form", autocomplete = "off" }))
-{
-    @Html.AntiForgeryToken()
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-lg btn-success login-btn">Login</button>
+                        </div>
+                    </form>
 
-    <form>
-        <div class="form-group">
-            <label for="exampleInputEmail1">Username</label>
-            <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" name="username">
-            <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                    <div class="mt-3 text-right">
+                        <span>No user? Click <a href="/User/CreateUser">here</a></span>
+                    </div>
+                }
+
+                @if (ViewBag.Error != null)
+                {
+                    <div class="mt-3">
+                        <p class="text-danger"><i class="fas fa-exclamation-circle"></i> @ViewBag.Error</p>
+                    </div>
+                }
+
+            </div>
         </div>
-        <div class="form-group">
-            <label for="exampleInputPassword1">Password</label>
-            <input type="password" class="form-control" id="exampleInputPassword1" name="password">
-        </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
-        <p class="mt-3">No user? Click here:</p>
-        <a class="btn btn-primary" href="/User/CreateUser">Create new user</a>
-    </form>
-}
+    </div>
+</div>
+

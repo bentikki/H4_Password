@@ -58,6 +58,12 @@ namespace WebVersion.Service
 
         }
 
+        public void LockOutUser(IUser user)
+        {
+            this.dbService.LockOutUser(user);
+            this.LogOut();
+        }
+
         public void LogOut()
         {
             FormsAuthentication.SignOut();

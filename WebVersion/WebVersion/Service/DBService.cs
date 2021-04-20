@@ -9,6 +9,7 @@ using ConsoleVersion.Helpers;
 using Dapper;
 using Dapper.Contrib;
 using Dapper.Contrib.Extensions;
+using WebVersion.Entities;
 
 namespace ConsoleVersion.Service
 {
@@ -88,5 +89,19 @@ namespace ConsoleVersion.Service
             }
             return user;
         }
+        
+        public void LockOutUser(IUser user)
+        {
+            LockedUsers lockUser = new LockedUsers();
+            lockUser.UserName = user.Username;
+
+            using (var conn = new SqlConnection(ConnectionStringHelper.GetDBConnectionString()))
+            {
+                conn.Open();
+                var identity = conn.Insert(lockUser);
+                conn.Close();
+            }
+        }
+
     }
 }
