@@ -5,13 +5,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 using WebVersion.Service;
 
 namespace ConsoleVersion.Helpers
 {
     static class LoginAttemptHandler
     {
-        private static readonly int loginAttemptsMax = 5;
+        private static readonly int loginAttemptsMax = 3;
         private static int currentAttempts = 0;
 
         public static void AddLoginAttempt()
@@ -34,9 +35,10 @@ namespace ConsoleVersion.Helpers
             return false;
         }
 
-        public static void LockOutUser(IUser user)
+        public static void LockOutUser(string username)
         {
-            UserService.Instance.LockOutUser(user); 
+            UserService.Instance.LockOutUser(username);
+            LoginAttemptHandler.ResetLoginAttempt();
         }
 
     }

@@ -4,15 +4,26 @@
     ViewBag.Title = "Homepage";
 }
 
-<div>
-    <p>Login success!</p>
-    <p>Logged in as username: @Model.Username</p>
+<div class="container">
+    <div class="login-window">
+        <div class="row">
+            <div class="col-sm-6 col-xs-12 login-large-icon">
+                <iframe src="https://giphy.com/embed/Od0QRnzwRBYmDU3eEO" width="480" height="480" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><p><a href="https://giphy.com/gifs/primevideo-2020-borat-subsequent-moviefilm-Od0QRnzwRBYmDU3eEO"></a></p>
+            </div>
+            <div class="col-sm-6 col-xs-12">
 
+                <h1 class="mb-3">
+                    Login success!
+                </h1>
 
-    @using (Html.BeginForm("LogOut", "Home", FormMethod.Post))
-    {
-        @Html.AntiForgeryToken()
-        <button type="submit" class="btn btn-link">Logout</button>
-    }
+                <p>Logged in as username: @Model.Username</p>
+
+                @using (Html.BeginForm("LogOut", "Home", FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-sign-out-alt"></i> Logout</button>
+                }
+            </div>
+        </div>
+    </div>
 </div>
-

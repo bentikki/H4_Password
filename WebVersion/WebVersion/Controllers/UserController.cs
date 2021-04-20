@@ -48,7 +48,7 @@ namespace WebVersion.Controllers
             {
                 if(e.Message == "Username_exists")
                 {
-                    ViewBag.Error = "The selected username allready exists.";
+                    ViewBag.Error = "The selected username already exists.";
                 }
                 else
                 {

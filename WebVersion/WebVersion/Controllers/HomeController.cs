@@ -42,6 +42,12 @@ namespace WebVersion.Controllers
 
             try
             {
+                if (user.Username == "" || user.UserPassword == "")
+                    throw new Exception("No_Input");
+
+                if (UserService.Instance.UserIsLockedOut(user.Username))
+                    throw new Exception("User_Locked");
+
                 user = UserService.Instance.Login(user);
                 
                 LoginAttemptHandler.ResetLoginAttempt();
@@ -52,16 +58,30 @@ namespace WebVersion.Controllers
             {
                 string errorText = string.Empty;
 
-                LoginAttemptHandler.AddLoginAttempt();
-
-                if (LoginAttemptHandler.MaxAttempts())
+                if(e.Message == "No_Input")
                 {
-                    errorText = "You have run out of login attempts.";
+                    errorText = "Username and password must be filled!";
+                }
+                else if(e.Message == "User_Locked")
+                {
+                    errorText = "The user is locked out!";
                 }
                 else
                 {
-                    errorText = "Could not login with provided credentials. Please try again.";
+                    LoginAttemptHandler.AddLoginAttempt();
+
+                    if (LoginAttemptHandler.MaxAttempts())
+                    {
+                        LoginAttemptHandler.LockOutUser(username);
+                        errorText = "You have run out of login attempts.";
+                    }
+                    else
+                    {
+                        errorText = "Could not login with provided credentials. Please try again.";
+                    }
+
                 }
+
 
                 ViewBag.Error = errorText;
                 return View();

@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Security;
 using ConsoleVersion.Entities;
 using ConsoleVersion.Service;
+using WebVersion.Entities;
 
 namespace WebVersion.Service
 {
@@ -58,10 +59,20 @@ namespace WebVersion.Service
 
         }
 
-        public void LockOutUser(IUser user)
+        public void LockOutUser(string username)
         {
-            this.dbService.LockOutUser(user);
+            this.dbService.LockOutUser(username);
             this.LogOut();
+        }
+
+        public bool UserIsLockedOut(string username)
+        {
+            LockedUser lockedUser = this.dbService.IsUserLockedOut(username);
+
+            if (lockedUser == null)
+                return false;
+
+            return true;
         }
 
         public void LogOut()
