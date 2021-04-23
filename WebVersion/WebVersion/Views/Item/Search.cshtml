@@ -1,0 +1,50 @@
+﻿@model ConsoleVersion.Entities.SearchViewModel
+
+@{
+    ViewBag.Title = "Login";
+}
+
+<div class="container">
+    <div class="login-window">
+        <div class="row">
+            <div class="col-sm-6 col-xs-12">
+
+                <h1 class="mb-3">
+                    Søg efter vare:
+                </h1>
+                @using (Html.BeginForm("SearchItem", "Item", FormMethod.Post, new { id = "main-form", autocomplete = "off" }))
+                {
+                    <form>
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Vare navn</label>
+                            <input type="text" class="form-control" name="searchString">
+                        </div>
+
+                        <div class="text-left">
+                            <button type="submit" class="btn btn-primary login-btn">Søg</button>
+                        </div>
+                    </form>
+                }
+
+            </div>
+
+        </div>
+        <div class="row mt-5">
+
+                @foreach (var item in Model.Items)
+                {
+                    <div class="col-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">@item.ItemName</h5>
+                                <p class="card-text">Pris: @item.ItemPrice DKK</p>
+                                <a href="#" class="btn btn-primary">Køb</a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            
+        </div>
+    </div>
+</div>
+
