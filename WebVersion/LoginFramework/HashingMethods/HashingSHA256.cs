@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace LoginFramework
+namespace LoginFramework.HashingMethods
 {
     public class HashingSHA256 : HashingMaster, IHashingMethod
     {

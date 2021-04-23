@@ -9,5 +9,6 @@ namespace LoginFramework.Hashing
     {
         byte[] HashPasswordWithSalt(byte[] toBeHashed, byte[] salt, int numberOfIterations = 50000);
         IHashedUser GetHashedUser(IHashedUser userToHash);
+        string GetHashedPasswordString(string inputPassword, string salt64string);
     }
 }

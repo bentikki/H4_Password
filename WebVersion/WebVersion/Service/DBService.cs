@@ -1,37 +1,33 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ConsoleVersion.Entities;
+﻿using ConsoleVersion.Entities;
 using ConsoleVersion.Helpers;
 using Dapper;
-using Dapper.Contrib;
 using Dapper.Contrib.Extensions;
 using LoginFramework;
 using LoginFramework.Models;
+using System;
+using System.Data.SqlClient;
+using System.Linq;
+using System.Text;
 using WebVersion.Entities;
+using WebVersion.Helpers;
 
 namespace ConsoleVersion.Service
 {
-    class DBService
+    internal class DBService
     {
-
         public void CreateUser(IUser user)
         {
-            LoginHandler loginHandler = new LoginHandler(HashingMethod.SHA256);
-            IHashedUser hashedUser = loginHandler.CreateHashedUserInfo(user.Username, user.UserPassword);
+            IHashedUser hashedUser = HandlerFactory.GetLoginHandler().CreateHashedUserInfo(user.Username, user.UserPassword);
 
             user.UserPassword = hashedUser.Password;
             user.Salt = hashedUser.Salt;
 
-            using (var conn = new SqlConnection(ConnectionStringHelper.GetDBConnectionString()))
+            using (var conn = new SqlConnection(HandlerFactory.GetDBConnectionString()))
             {
                 conn.Open();
                 var identity = conn.Insert(user);
                 conn.Close();
-            }         
+            }
         }
 
         public IUser LoginUser(IUser user)
@@ -43,29 +39,23 @@ namespace ConsoleVersion.Service
                 if (DBuser == null)
                     throw new Exception("LoginError_User_Not_Found");
 
-                byte[] salt = Convert.FromBase64String(DBuser.Salt);
-                byte[] insertedPasswordByteArr = Encoding.UTF8.GetBytes(user.UserPassword);
-                byte[] hashedPassword = HashingHelper.HashPasswordWithSalt(insertedPasswordByteArr, salt);
+                bool userIsVerified = HandlerFactory.GetLoginHandler().VerifyPasswordHash(user.UserPassword, DBuser.UserPassword, DBuser.Salt);
 
-                byte[] newHash = hashedPassword;
-
-                string newHashString = Convert.ToBase64String(newHash);
-
-                if(newHashString == DBuser.UserPassword)
+                if (userIsVerified)
                 {
                     user.UserPassword = null;
                     user.Salt = null;
 
                     return user;
                 }
-                else{
+                else
+                {
                     throw new Exception("LoginError_Password_Incorrect");
                 }
-
             }
             catch (Exception e)
             {
-                throw e;   
+                throw e;
             }
         }
 
@@ -76,8 +66,9 @@ namespace ConsoleVersion.Service
             {
                 conn.Open();
                 user = conn.QuerySingleOrDefault<User>(
-                        "SELECT * FROM Users WHERE [UserName] = @Username", 
-                        new { 
+                        "SELECT * FROM Users WHERE [UserName] = @Username",
+                        new
+                        {
                             Username = fetchUsername
                         }
                     );
@@ -85,7 +76,7 @@ namespace ConsoleVersion.Service
             }
             return user;
         }
-        
+
         public void LockOutUser(string username)
         {
             LockedUser lockUser = new LockedUser();
@@ -128,6 +119,5 @@ namespace ConsoleVersion.Service
                 conn.Close();
             }
         }
-
     }
 }

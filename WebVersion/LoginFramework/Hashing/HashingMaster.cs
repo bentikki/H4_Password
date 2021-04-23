@@ -19,24 +19,22 @@ namespace LoginFramework.Hashing
         public IHashedUser GetHashedUser(IHashedUser userToHash)
         {
             // Check if user input is valid.
-            if (userToHash.Username == string.Empty || userToHash.Username == "")
-                throw new ArgumentNullException("Username");
-
-            if (userToHash.Password == string.Empty || userToHash.Password == "")
+            if (userToHash.Password == null || userToHash.Password == string.Empty)
                 throw new ArgumentNullException("Password");
 
-            if (userToHash.SaltByteArray == null || userToHash.SaltByteArray.Length <= 0)
-                throw new ArgumentNullException("SaltByteArray");
+            if (userToHash.Salt == null || userToHash.Salt == string.Empty)
+                throw new ArgumentNullException("Salt");
 
             // Convert password string to byte array
             byte[] passwordByteArray = Encoding.UTF8.GetBytes(userToHash.Password);
+            byte[] saltByteArray = Convert.FromBase64String(userToHash.Salt);
 
             // Create hashed password with salt.
-            byte[] passwordWithSalt = this.HashPasswordWithSalt(passwordByteArray, userToHash.SaltByteArray);
+            byte[] passwordWithSalt = this.HashPasswordWithSalt(passwordByteArray, saltByteArray);
 
             // Set salt string - using Base64String
             userToHash.Password = Convert.ToBase64String(passwordWithSalt);
-            userToHash.Salt = Convert.ToBase64String(userToHash.SaltByteArray);
+            userToHash.Salt = Convert.ToBase64String(saltByteArray);
 
             return userToHash;
         }

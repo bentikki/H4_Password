@@ -139,8 +139,8 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Helpers\ConnectionStringHelper.cs" />
-    <Compile Include="Helpers\HashingHelper.cs" />
     <Compile Include="Helpers\LoginAttemptHandler.cs" />
+    <Compile Include="Helpers\HandlerFactory.cs" />
     <Compile Include="Models\CommentViewModel.cs" />
     <Compile Include="Models\SearchViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
