@@ -9,6 +9,8 @@ using ConsoleVersion.Helpers;
 using Dapper;
 using Dapper.Contrib;
 using Dapper.Contrib.Extensions;
+using LoginFramework;
+using LoginFramework.Models;
 using WebVersion.Entities;
 
 namespace ConsoleVersion.Service
@@ -18,24 +20,18 @@ namespace ConsoleVersion.Service
 
         public void CreateUser(IUser user)
         {
-            // Generate Salt
-            int saltSize = 32;
-            byte[] salt = HashingHelper.GenerateSalt(saltSize);
-            string saltBaseString = Convert.ToBase64String(salt);
+            LoginHandler loginHandler = new LoginHandler(HashingMethod.SHA256);
+            IHashedUser hashedUser = loginHandler.CreateHashedUserInfo(user.Username, user.UserPassword);
 
-            // Add Salt and Hashed Password to User
-            user.UserPassword = HashingHelper.GetHashedPasswordString(user.UserPassword, saltBaseString);
-            user.Salt = saltBaseString;
+            user.UserPassword = hashedUser.Password;
+            user.Salt = hashedUser.Salt;
 
             using (var conn = new SqlConnection(ConnectionStringHelper.GetDBConnectionString()))
             {
                 conn.Open();
                 var identity = conn.Insert(user);
                 conn.Close();
-            }
-            
-
-            
+            }         
         }
 
         public IUser LoginUser(IUser user)

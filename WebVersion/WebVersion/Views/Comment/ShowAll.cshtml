@@ -1,0 +1,48 @@
+﻿@model ConsoleVersion.Entities.CommentViewModel
+
+@{
+    ViewBag.Title = "Login";
+}
+
+<div class="container">
+    <div class="login-window">
+        <div class="row">
+            <div class="col-sm-6 col-xs-12">
+
+                <h1 class="mb-3">
+                    Write a comment!
+                </h1>
+                @using (Html.BeginForm("CreateComment", "Comment", FormMethod.Post, new { id = "main-form", autocomplete = "off" }))
+                {
+                    <form>
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Your Comment:</label>
+                            <input type="text" class="form-control" name="commentContent">
+                        </div>
+
+                        <div class="text-left">
+                            <button type="submit" class="btn btn-primary login-btn">Send</button>
+                        </div>
+                    </form>
+                }
+
+            </div>
+
+        </div>
+        <div class="row mt-5">
+
+            @foreach (var comment in Model.Comments)
+            {
+
+                <div class="card col-12 mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Comment</h5>
+                        <p class="card-text">@Html.Raw(comment.Content)</p>
+                    </div>
+                </div>
+            }
+
+        </div>
+    </div>
+</div>
+
